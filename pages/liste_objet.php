@@ -3,6 +3,7 @@ require('../inc/fonction.php');
 
 $conn = dbconnect();
 $objets = getObjetsAvecEtat($conn);
+$aujourdhui = date('Y-m-d'); // Date du jour
 ?>
 
 <!DOCTYPE html>
@@ -56,12 +57,12 @@ $objets = getObjetsAvecEtat($conn);
     </style>
 </head>
 <header class="py-3 bg-dark">
-        <ul class="nav">
-            <li class="nav-item"><a class="nav-link text-white" href="#">Emprunt</a></li>
-            <li class="nav-item ms-auto"><a class="nav-link text-white" href="#">Accueil<i class="fa fa-house"></i></a></li>
-            <li class="nav-item ms-auto"><a class="nav-link text-white" href="ajout_objet.php">Ajouter objet<i class="fa fa-house"></i></a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="login.php">Déconnexion <i class="fa fa-right-from-bracket"></i></a></li>
-        </ul>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link text-white" href="#">Emprunt</a></li>
+        <li class="nav-item ms-auto"><a class="nav-link text-white" href="#">Accueil<i class="fa fa-house"></i></a></li>
+        <li class="nav-item ms-auto"><a class="nav-link text-white" href="ajout_objet.php">Ajouter objet<i class="fa fa-house"></i></a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="login.php">Déconnexion <i class="fa fa-right-from-bracket"></i></a></li>
+    </ul>
 </header>
 <body>
 <div class="container py-4">
@@ -83,17 +84,51 @@ $objets = getObjetsAvecEtat($conn);
                         <p><strong>Emprunt :</strong> <?= $row['date_emprunt'] ? htmlspecialchars($row['date_emprunt']) : '—' ?></p>
                         <p>
                             <strong>État :</strong>
-                            <?php if ($row['date_emprunt'] && !$row['date_retour']): ?>
-                                <span class="etat-emprunt">Emprunt en cours</span>
-                            <?php else: ?>
-                                <span class="etat-disponible">Disponible</span>
-                            <?php endif; ?>
+                            <?php
+                            // Si l'objet a une date d'emprunt et une date de retour
+                            if ($row['date_emprunt'] && $row['date_retour']) {
+                                $dateRetour = new DateTime($row['date_retour']);
+                                $aujourdhuiDT = new DateTime($aujourdhui);
+                                $interval = $aujourdhuiDT->diff($dateRetour);
+                                $joursRestants = (int)$interval->format('%r%a');
+
+                                if ($joursRestants > 0) {
+                                    echo '<span class="etat-emprunt">Emprunt en cours (disponible dans ' 
+                                        . $joursRestants . ' jour' . ($joursRestants > 1 ? 's' : '') . ')</span>';
+                                } elseif ($joursRestants === 0) {
+                                    echo '<span class="etat-emprunt">Emprunt en cours (disponible aujourd\'hui)</span>';
+                                } else {
+                                    // Date passée → disponible
+                                    echo '<span class="etat-disponible">Disponible</span>';
+                                }
+                            } else {
+                                // Pas d'emprunt enregistré
+                                echo '<span class="etat-disponible">Disponible</span>';
+                            }
+                            ?>
                         </p>
 
                         <!-- Bouton Supprimer -->
                         <a href="supprimer_objet.php?id_objet=<?= $row['id_objet'] ?>"
                            onclick="return confirm('Voulez-vous vraiment supprimer cet objet ?');"
                            class="btn btn-sm btn-danger mt-2">Supprimer</a>
+
+                        <!-- Bouton Emprunter et formulaire -->
+                        <?php if (!($row['date_emprunt'] && $row['date_retour'] && (new DateTime($aujourdhui) <= new DateTime($row['date_retour'])))): ?>
+                            <button type="button" class="btn btn-sm btn-primary mt-2"
+                                    onclick="afficherFormulaire(<?= $row['id_objet'] ?>)">
+                                Emprunter
+                            </button>
+                            <form action="emprunter_objet.php" method="POST"
+                                  class="mt-2 d-none" id="form_<?= $row['id_objet'] ?>">
+                                <input type="hidden" name="id_objet" value="<?= $row['id_objet'] ?>">
+                                <div class="input-group input-group-sm mb-2">
+                                    <input type="number" class="form-control" name="duree_jours"
+                                           placeholder="Durée (jours)" required min="1">
+                                    <button type="submit" class="btn btn-success">Confirmer</button>
+                                </div>
+                            </form>
+                        <?php endif; ?>
 
                     </div>
                 </div>
@@ -102,5 +137,13 @@ $objets = getObjetsAvecEtat($conn);
         <?php endforeach; ?>
     </div>
 </div>
+<script>
+function afficherFormulaire(idObjet) {
+    const form = document.getElementById("form_" + idObjet);
+    if (form) {
+        form.classList.toggle("d-none");
+    }
+}
+</script>
 </body>
 </html>

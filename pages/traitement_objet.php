@@ -9,7 +9,7 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
-// Récupère id_membre depuis la session (attention au nom exact)
+
 $id_membre = $_SESSION['utilisateur']['id_membre'];
 
 $nom_objet = mysqli_real_escape_string($conn, $_POST['nom_objet']);
@@ -21,7 +21,7 @@ if (!mysqli_query($conn, $sql)) {
 }
 $id_objet = mysqli_insert_id($conn);
 
-$uploadDir = __DIR__ . '../asset/images_objet/';  // chemin absolu vers dossier d'upload
+$uploadDir = __DIR__ . '../asset/images_objet/'; 
 $defaultRelPath = '../asset/images_objet/default.jpg';
 $images_uploaded = false;
 
@@ -32,9 +32,9 @@ if (!empty($_FILES['images']['name'][0])) {
             $newName = uniqid("img_") . "." . $ext;
             $destination = $uploadDir . $newName;
 
-            // Déplace le fichier temporaire vers le dossier cible
+    
             if (move_uploaded_file($tmpName, $destination)) {
-                $imagePath = '../asset/images_objet/' . $newName;  // chemin relatif stocké en base
+                $imagePath = '../asset/images_objet/' . $newName;  
                 $sqlImg = "INSERT INTO s2_final_images_objet (id_objet, nom_image) VALUES ($id_objet, '$imagePath')";
                 mysqli_query($conn, $sqlImg);
                 $images_uploaded = true;
