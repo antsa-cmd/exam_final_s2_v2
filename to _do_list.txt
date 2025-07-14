@@ -1,0 +1,11 @@
+base_de_donnee
+    -tables
+        -membre
+            -id,nom,dtn,genre,email,ville,mdp,images
+        -categorie_objet
+            -id,nom,
+        -objet 
+            -id,nom,id_catégorie,id_membre
+        -image_objet
+            id_image,id_objet,nom iumage
+        -emprunt
