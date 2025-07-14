@@ -58,7 +58,7 @@ $aujourdhui = date('Y-m-d'); // Date du jour
 </head>
 <header class="py-3 bg-dark">
     <ul class="nav">
-        <li class="nav-item"><a class="nav-link text-white" href="#">Emprunt</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="emprunter_objet.php">Emprunt</a></li>
         <li class="nav-item ms-auto"><a class="nav-link text-white" href="#">Accueil<i class="fa fa-house"></i></a></li>
         <li class="nav-item ms-auto"><a class="nav-link text-white" href="ajout_objet.php">Ajouter objet<i class="fa fa-house"></i></a></li>
         <li class="nav-item"><a class="nav-link text-white" href="login.php">Déconnexion <i class="fa fa-right-from-bracket"></i></a></li>
@@ -85,7 +85,6 @@ $aujourdhui = date('Y-m-d'); // Date du jour
                         <p>
                             <strong>État :</strong>
                             <?php
-                            // Si l'objet a une date d'emprunt et une date de retour
                             if ($row['date_emprunt'] && $row['date_retour']) {
                                 $dateRetour = new DateTime($row['date_retour']);
                                 $aujourdhuiDT = new DateTime($aujourdhui);
@@ -98,22 +97,18 @@ $aujourdhui = date('Y-m-d'); // Date du jour
                                 } elseif ($joursRestants === 0) {
                                     echo '<span class="etat-emprunt">Emprunt en cours (disponible aujourd\'hui)</span>';
                                 } else {
-                                    // Date passée → disponible
                                     echo '<span class="etat-disponible">Disponible</span>';
                                 }
                             } else {
-                                // Pas d'emprunt enregistré
                                 echo '<span class="etat-disponible">Disponible</span>';
                             }
                             ?>
                         </p>
 
-                        <!-- Bouton Supprimer -->
                         <a href="supprimer_objet.php?id_objet=<?= $row['id_objet'] ?>"
                            onclick="return confirm('Voulez-vous vraiment supprimer cet objet ?');"
                            class="btn btn-sm btn-danger mt-2">Supprimer</a>
 
-                        <!-- Bouton Emprunter et formulaire -->
                         <?php if (!($row['date_emprunt'] && $row['date_retour'] && (new DateTime($aujourdhui) <= new DateTime($row['date_retour'])))): ?>
                             <button type="button" class="btn btn-sm btn-primary mt-2"
                                     onclick="afficherFormulaire(<?= $row['id_objet'] ?>)">

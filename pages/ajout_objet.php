@@ -85,7 +85,7 @@ if ($result) {
 </head>
 <header class="py-3 bg-dark">
         <ul class="nav">
-            <li class="nav-item"><a class="nav-link text-white" href="#">Emprunt</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="emprunter_objet.php">Emprunt<i class="fa fa-house"></i></a></li>
             <li class="nav-item ms-auto"><a class="nav-link text-white" href="liste_objet.php">Accueil<i class="fa fa-house"></i></a></li>
             <li class="nav-item ms-auto"><a class="nav-link text-white" href="ajout_objet.php">Ajouter objet<i class="fa fa-house"></i></a></li>
             <li class="nav-item"><a class="nav-link text-white" href="login.php">Déconnexion <i class="fa fa-right-from-bracket"></i></a></li>

@@ -193,12 +193,6 @@ INSERT INTO s2_final_images_objet (id_objet, nom_image) VALUES
   
 
 
-
-
-
-
-
-
 CREATE OR REPLACE VIEW s2_final_vue_objets_emprunt AS
 SELECT 
     o.id_objet,
@@ -223,3 +217,6 @@ JOIN s2_final_membre m
 LEFT JOIN s2_final_emprunt e 
   ON o.id_objet = e.id_objet 
      AND e.date_retour IS NULL;
+
+
+je vous donne d'abord le page membres et c'est avec ca qu'on vas commencer 

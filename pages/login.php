@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <header class="container-fluid py-3 bg-dark">
         <ul class="nav justify-content-start w-100">
-            <li class="nav-item"><a href="#" class="nav-link text-white"><strong>TIKTOK</strong></a></li>
+            <li class="nav-item"><a href="#" class="nav-link text-white"><strong>EXAMEN</strong></a></li>
             <li class="nav-item"><a href="inscription.php" class="nav-link text-white">S'inscrire<i class="fa fa-right-from-bracket"></i></a></li>
         </ul>
 </header>
