@@ -89,6 +89,12 @@ $objets = getObjetsAvecEtat($conn);
                                 <span class="etat-disponible">Disponible</span>
                             <?php endif; ?>
                         </p>
+
+                        <!-- Bouton Supprimer -->
+                        <a href="supprimer_objet.php?id_objet=<?= $row['id_objet'] ?>"
+                           onclick="return confirm('Voulez-vous vraiment supprimer cet objet ?');"
+                           class="btn btn-sm btn-danger mt-2">Supprimer</a>
+
                     </div>
                 </div>
             </div>
